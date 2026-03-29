@@ -3,280 +3,110 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title></title>
-
+<title>رسالة حب بأسلوب GitHub</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
 <style>
-body {
+  body {
     margin: 0;
     background: black;
     color: #00ff7b;
-    font-family: monospace;
-    overflow: hidden;
-    touch-action: manipulation;
-}
-
-#terminal {
-    width: 100%;
+    font-family: 'Fira Code', monospace;
+    display: flex;
+    justify-content: center; /* تمركز أفقي */
+    align-items: center;     /* تمركز عمودي */
     height: 100vh;
-    padding: 20px;
-    box-sizing: border-box;
+    flex-direction: column;
+    padding: 0; /* إزالة الـpadding لأننا مركزين */
+  }
+
+  .terminal {
+    background: rgb(42, 42, 42);
+    border-radius: 10px;
+    padding: 40px 30px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.7);
+    position: relative;
     text-align: left;
-    direction: ltr;
-    font-size: clamp(12px, 3.5vw, 18px);
-    line-height: 1.6;
-    white-space: pre-line;
-    overflow-y: auto;
-}
+  }
 
-.glow { text-shadow: 0 0 5px #00ff9f, 0 0 15px #00ff9f; }
+  .terminal::before {
+    content: "Love Terminal";
+    position: absolute;
+    top: 15px;
+    left: 25px;
+    color: #00ff7b;
+    font-weight: bold;
+  }
 
-.glitch { 
-    color: red; 
-    animation: glitch 0.1s infinite; 
-}
+  .line {
+    margin: 15px 0;
+    font-size: 1.2rem;
+    opacity: 0;
+    animation: appear 1s forwards;
+  }
 
-@keyframes glitch { 
-    0% { transform: translate(0); } 
-    50% { transform: translate(2px,-2px); } 
-    100% { transform: translate(-2px,2px); } 
-}
+  .line:nth-child(1){animation-delay: 0.5s;}
+  .line:nth-child(2){animation-delay: 1.5s;}
+  .line:nth-child(3){animation-delay: 2.5s;}
 
-.cursor {
-    display: inline-block;
-    width: 10px;
-    background-color: #00ff9f;
-    margin-left: 2px;
-    animation: blink 0.7s steps(1) infinite;
-}
+  @keyframes appear {
+    to { opacity: 1; }
+  }
 
-@keyframes blink { 
-    50% { background-color: transparent; } 
+  button {
+    margin-top: 25px;
+    padding: 12px 25px;
+    font-size: 1rem;
+    border: 2px solid #00ff7b;
+    border-radius: 8px;
+    background: transparent;
+    color: #00ff7b;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    background: black;
+    color: #00ff7b;
+    transform: scale(1.05);
+  }
+  /* داخل <style> بعد كل شيء آخر */
+@media (max-width: 490px) { 
+  .terminal {
+    padding: 37px 37px;   /* أصغر بادينج */
+    width: 70%;
+    max-width: 300px;
+    word-wrap: break-word; /* مهم للنصوص الطويلة */
+  }
+
+  .line {
+    font-size: 0.95rem;   /* تصغير حجم الخط أكتر */
+    margin: 8px 0;
+  }
+
+  button {
+    padding: 8px 15px;  
+    font-size: 0.85rem;
+  }
 }
 </style>
 </head>
-
 <body>
 
-<div id="terminal"></div>
+<div class="terminal">
+  <div class="line">...Initializing Love Terminal</div>
+  <div class="line">...Connecting to your heart</div>
+  <div class="line">!Connection Established</div>
+  <button onclick="goToLovePage()"> View Secret Message</button>
+</div>
 
-<!-- 🔊 صوت التحذير -->
-<audio id="alarmSound" src="https://www.myinstants.com/media/sounds/alarm.mp3"></audio>
+
 
 <script>
-const terminal = document.getElementById("terminal");
-const alarmSound = document.getElementById("alarmSound");
-
-function rand(min,max){ return Math.floor(Math.random()*(max-min)+min); }
-function fakeIP(){ return "197." + rand(0,255)+"."+rand(0,255)+"."+rand(0,255); }
-
-// تعطيل أي صوت تاني
-function playSound(sound){ return; }
-
-const areas = ["Nasr City","Heliopolis","Maadi","Dokki","Shubra"];
-const wifi=["WE_Home_5G","Vodafone-Home","Orange_Data","Hidden_Network","Cairo_Free_WiFi"];
-const fakeFiles=[
-"C:\\Users\\User\\Desktop\\Passwords.txt",
-"C:\\Users\\User\\Pictures\\Private.jpg",
-"C:\\Users\\User\\Documents\\BankInfo.pdf",
-"C:\\Users\\User\\Downloads\\secret.zip"
-];
-
-let lines = [
-"[BOOT] Initializing system...",
-"[SYS] Device: Android/Phone",
-"[CPU] Qualcomm Snapdragon detected",
-"[RAM] 8GB Memory",
-"[GPU] Adreno GPU",
-"[OK] Connecting to device...",
-"[OK] Bypassing firewall...",
-"[SUCCESS] Access Granted",
-"[TRACK] User detected",
-"[LOC] Fetching location...",
-"[LOC] " + areas[rand(0,areas.length)] + ", Cairo",
-"[NET] ISP: Telecom Egypt (WE)",
-"[IP] " + fakeIP(),
-"[SECURITY] Antivirus Disabled",
-"[SCAN] Searching networks..."
-];
-
-let i = 0;
-
-function typeLines(){
-    if(i<lines.length){
-
-        let div=document.createElement("div");
-        let span=document.createElement("span");
-        span.classList.add("glow");
-        span.innerText = lines[i]+" ";
-
-        let cursor=document.createElement("span");
-        cursor.classList.add("cursor");
-
-        span.appendChild(cursor);
-        div.appendChild(span);
-        terminal.appendChild(div);
-
-        terminal.scrollTop = terminal.scrollHeight;
-
-        if(lines[i].includes("LOC")||lines[i].includes("SCAN")){
-            if(navigator.vibrate) navigator.vibrate(100);
-        }
-
-        if(lines[i].includes("[BOOT] Initializing system...")){
-            i++; 
-            setTimeout(addRealInfo, 500);
-            return;
-        }
-
-        i++;
-        setTimeout(typeLines, 400);
-
-    } else {
-        scanWifi();
-    }
+function goToLovePage() {
+  window.location.href = "index1.html"; // ضع هنا رابط الصفحة اللي عايز تروح لها
 }
-
-function addRealInfo(){
-
-    let realLines = [];
-
-    let deviceType = /Mobi|Android/i.test(navigator.userAgent) ? "Mobile" : "Desktop";
-    realLines.push(`[DEVICE TYPE] ${deviceType}`);
-
-    let storage = navigator.deviceMemory ? navigator.deviceMemory * 32 : 64;
-    let used = Math.floor(storage * Math.random());
-    realLines.push(`[STORAGE] ${used}GB / ${storage}GB used`);
-
-    let localIP = `192.168.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
-    realLines.push(`[LOCAL IP] ${localIP}`);
-
-    let signal = Math.floor(Math.random()*5)+1;
-    realLines.push(`[SIGNAL] ${"█".repeat(signal)}${"░".repeat(5-signal)}`);
-
-    const apps = ["WhatsApp","Instagram","TikTok","Facebook","Messenger"];
-    realLines.push(`[APPS] Running: ${apps.sort(()=>0.5-Math.random()).slice(0,3).join(", ")}`);
-
-    realLines.push("[MIC] Listening...");
-
-    realLines.push("[BROWSER] " + navigator.userAgent);
-
-    let now = new Date();
-    realLines.push("[TIME] " + now.toLocaleTimeString());
-    realLines.push("[DATE] " + now.toLocaleDateString());
-
-    realLines.push("[LANG] " + navigator.language);
-
-    if(navigator.hardwareConcurrency) realLines.push("[CPU CORES] " + navigator.hardwareConcurrency);
-    if(navigator.deviceMemory) realLines.push("[RAM REAL] " + navigator.deviceMemory + " GB");
-
-    realLines.push("[SCREEN] " + screen.width + "x" + screen.height);
-    realLines.push("[VIEWPORT] " + window.innerWidth + "x" + window.innerHeight);
-
-    realLines.push("[STATUS] " + (navigator.onLine ? "ONLINE" : "OFFLINE"));
-
-    if(navigator.connection){
-        realLines.push("[NET] " + navigator.connection.effectiveType + " | " + navigator.connection.downlink + "Mbps");
-    }
-
-    realLines.push("[TIMEZONE] " + Intl.DateTimeFormat().resolvedOptions().timeZone);
-
-    typeRealLines(realLines, 0);
-}
-
-function typeRealLines(arr, index){
-    if(index >= arr.length){
-        setTimeout(typeLines, 400);
-        return;
-    }
-
-    let div=document.createElement("div");
-    let span=document.createElement("span");
-    span.classList.add("glow");
-    span.innerText = arr[index]+" ";
-
-    let cursor=document.createElement("span");
-    cursor.classList.add("cursor");
-
-    span.appendChild(cursor);
-    div.appendChild(span);
-    terminal.appendChild(div);
-
-    terminal.scrollTop = terminal.scrollHeight;
-
-    setTimeout(()=>{
-        typeRealLines(arr, index+1);
-    },400);
-}
-
-function scanWifi(){
-    let index=0;
-    let interval=setInterval(()=>{
-        let div=document.createElement("div");
-        div.innerText="[FOUND] "+wifi[index];
-        terminal.appendChild(div);
-        terminal.scrollTop = terminal.scrollHeight;
-        index++;
-        if(index>=wifi.length){
-            clearInterval(interval);
-            startCountdown();
-        }
-    },350);
-}
-
-function startCountdown(){
-    let count=3;
-
-    // 🔊 تشغيل الإنذار
-    alarmSound.loop = true;
-    alarmSound.play().catch(()=>{});
-
-    let div=document.createElement("div");
-    div.classList.add("glitch");
-    terminal.appendChild(div);
-
-    let fileIndex = 0;
-
-    let interval=setInterval(()=>{
-        div.innerText="[!!] Deleting files in "+count+"...";
-
-        if(navigator.vibrate) navigator.vibrate(100);
-
-        if(fileIndex<fakeFiles.length){
-            let fDiv=document.createElement("div");
-            fDiv.innerText="[DELETED] "+fakeFiles[fileIndex];
-            terminal.appendChild(fDiv);
-            fileIndex++;
-        }
-
-        count--;
-        if(count<0){
-            clearInterval(interval);
-            finalMessage();
-        }
-    },700);
-}
-
-function finalMessage(){
-
-    // 🔇 وقف الصوت
-    alarmSound.pause();
-    alarmSound.currentTime = 0;
-
-    let msg=document.createElement("div");
-    msg.classList.add("glitch");
-    msg.innerText = "YOU ARE BEING WATCHED";
-    terminal.appendChild(msg);
-
-    setTimeout(()=>{
-        window.location.href="index1.html";
-    },2000);
-}
-
-document.body.addEventListener("touchstart", ()=>{
-    if(navigator.vibrate) navigator.vibrate(50);
-});
-
-typeLines();
 </script>
 
 </body>

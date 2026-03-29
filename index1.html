@@ -3,86 +3,280 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>رسالة حب شيك ❤️</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+<title></title>
+
 <style>
-  body {
+body {
     margin: 0;
+    background: black;
+    color: #00ff7b;
+    font-family: monospace;
+    overflow: hidden;
+    touch-action: manipulation;
+}
+
+#terminal {
+    width: 100%;
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #ffecd2, #fcb69f);
-    font-family: 'Cairo', sans-serif;
-    flex-direction: column;
-    text-align: center;
-  }
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: left;
+    direction: ltr;
+    font-size: clamp(12px, 3.5vw, 18px);
+    line-height: 1.6;
+    white-space: pre-line;
+    overflow-y: auto;
+}
 
-  h1 {
-    font-size: 3rem;
-    color: #fff;
-    opacity: 0;
-    animation: fadeIn 2s forwards;
-  }
+.glow { text-shadow: 0 0 5px #00ff9f, 0 0 15px #00ff9f; }
 
-  p {
-    font-size: 1.5rem;
-    color: #fff;
-    margin-top: 15px;
-    opacity: 0;
-    animation: fadeIn 2s 2s forwards;
-  }
+.glitch { 
+    color: red; 
+    animation: glitch 0.1s infinite; 
+}
 
-  .heart {
-    font-size: 4rem;
-    color: #ff2e63;
-    margin-top: 25px;
-    opacity: 0;
-    animation: fadeIn 2s 3s forwards, beat 1s 5s infinite;
-  }
+@keyframes glitch { 
+    0% { transform: translate(0); } 
+    50% { transform: translate(2px,-2px); } 
+    100% { transform: translate(-2px,2px); } 
+}
 
-  @keyframes fadeIn {
-    to { opacity: 1; }
-  }
+.cursor {
+    display: inline-block;
+    width: 10px;
+    background-color: #00ff9f;
+    margin-left: 2px;
+    animation: blink 0.7s steps(1) infinite;
+}
 
-  @keyframes beat {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-  }
-
-  button {
-    margin-top: 30px;
-    padding: 10px 25px;
-    font-size: 1.2rem;
-    border: 2px solid #fff;
-    border-radius: 50px;
-    background: transparent;
-    color: #fff;
-    cursor: pointer;
-    transition: 0.3s;
-    opacity: 0;
-    animation: fadeIn 2s 4s forwards;
-  }
-
-  button:hover {
-    background: #fff;
-    color: #ff2e63;
-    transform: scale(1.1);
-  }
+@keyframes blink { 
+    50% { background-color: transparent; } 
+}
 </style>
 </head>
+
 <body>
 
-<h1>أنت كل حياتي ❤️</h1>
-<p>خد دقيقة مني...</p>
-<div class="heart">💖</div>
-<button onclick="revealMessage()">إضغط هنا</button>
+<div id="terminal"></div>
+
+<!-- 🔊 صوت التحذير -->
+<audio id="alarmSound" src="https://www.myinstants.com/media/sounds/alarm.mp3"></audio>
 
 <script>
-function revealMessage() {
-  const msg = "أنا بحبك أكثر من أي حاجة 💕";
-  alert(msg);
+const terminal = document.getElementById("terminal");
+const alarmSound = document.getElementById("alarmSound");
+
+function rand(min,max){ return Math.floor(Math.random()*(max-min)+min); }
+function fakeIP(){ return "197." + rand(0,255)+"."+rand(0,255)+"."+rand(0,255); }
+
+// تعطيل أي صوت تاني
+function playSound(sound){ return; }
+
+const areas = ["Nasr City","Heliopolis","Maadi","Dokki","Shubra"];
+const wifi=["WE_Home_5G","Vodafone-Home","Orange_Data","Hidden_Network","Cairo_Free_WiFi"];
+const fakeFiles=[
+"C:\\Users\\User\\Desktop\\Passwords.txt",
+"C:\\Users\\User\\Pictures\\Private.jpg",
+"C:\\Users\\User\\Documents\\BankInfo.pdf",
+"C:\\Users\\User\\Downloads\\secret.zip"
+];
+
+let lines = [
+"[BOOT] Initializing system...",
+"[SYS] Device: Android/Phone",
+"[CPU] Qualcomm Snapdragon detected",
+"[RAM] 8GB Memory",
+"[GPU] Adreno GPU",
+"[OK] Connecting to device...",
+"[OK] Bypassing firewall...",
+"[SUCCESS] Access Granted",
+"[TRACK] User detected",
+"[LOC] Fetching location...",
+"[LOC] " + areas[rand(0,areas.length)] + ", Cairo",
+"[NET] ISP: Telecom Egypt (WE)",
+"[IP] " + fakeIP(),
+"[SECURITY] Antivirus Disabled",
+"[SCAN] Searching networks..."
+];
+
+let i = 0;
+
+function typeLines(){
+    if(i<lines.length){
+
+        let div=document.createElement("div");
+        let span=document.createElement("span");
+        span.classList.add("glow");
+        span.innerText = lines[i]+" ";
+
+        let cursor=document.createElement("span");
+        cursor.classList.add("cursor");
+
+        span.appendChild(cursor);
+        div.appendChild(span);
+        terminal.appendChild(div);
+
+        terminal.scrollTop = terminal.scrollHeight;
+
+        if(lines[i].includes("LOC")||lines[i].includes("SCAN")){
+            if(navigator.vibrate) navigator.vibrate(100);
+        }
+
+        if(lines[i].includes("[BOOT] Initializing system...")){
+            i++; 
+            setTimeout(addRealInfo, 500);
+            return;
+        }
+
+        i++;
+        setTimeout(typeLines, 400);
+
+    } else {
+        scanWifi();
+    }
 }
+
+function addRealInfo(){
+
+    let realLines = [];
+
+    let deviceType = /Mobi|Android/i.test(navigator.userAgent) ? "Mobile" : "Desktop";
+    realLines.push(`[DEVICE TYPE] ${deviceType}`);
+
+    let storage = navigator.deviceMemory ? navigator.deviceMemory * 32 : 64;
+    let used = Math.floor(storage * Math.random());
+    realLines.push(`[STORAGE] ${used}GB / ${storage}GB used`);
+
+    let localIP = `192.168.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
+    realLines.push(`[LOCAL IP] ${localIP}`);
+
+    let signal = Math.floor(Math.random()*5)+1;
+    realLines.push(`[SIGNAL] ${"█".repeat(signal)}${"░".repeat(5-signal)}`);
+
+    const apps = ["WhatsApp","Instagram","TikTok","Facebook","Messenger"];
+    realLines.push(`[APPS] Running: ${apps.sort(()=>0.5-Math.random()).slice(0,3).join(", ")}`);
+
+    realLines.push("[MIC] Listening...");
+
+    realLines.push("[BROWSER] " + navigator.userAgent);
+
+    let now = new Date();
+    realLines.push("[TIME] " + now.toLocaleTimeString());
+    realLines.push("[DATE] " + now.toLocaleDateString());
+
+    realLines.push("[LANG] " + navigator.language);
+
+    if(navigator.hardwareConcurrency) realLines.push("[CPU CORES] " + navigator.hardwareConcurrency);
+    if(navigator.deviceMemory) realLines.push("[RAM REAL] " + navigator.deviceMemory + " GB");
+
+    realLines.push("[SCREEN] " + screen.width + "x" + screen.height);
+    realLines.push("[VIEWPORT] " + window.innerWidth + "x" + window.innerHeight);
+
+    realLines.push("[STATUS] " + (navigator.onLine ? "ONLINE" : "OFFLINE"));
+
+    if(navigator.connection){
+        realLines.push("[NET] " + navigator.connection.effectiveType + " | " + navigator.connection.downlink + "Mbps");
+    }
+
+    realLines.push("[TIMEZONE] " + Intl.DateTimeFormat().resolvedOptions().timeZone);
+
+    typeRealLines(realLines, 0);
+}
+
+function typeRealLines(arr, index){
+    if(index >= arr.length){
+        setTimeout(typeLines, 400);
+        return;
+    }
+
+    let div=document.createElement("div");
+    let span=document.createElement("span");
+    span.classList.add("glow");
+    span.innerText = arr[index]+" ";
+
+    let cursor=document.createElement("span");
+    cursor.classList.add("cursor");
+
+    span.appendChild(cursor);
+    div.appendChild(span);
+    terminal.appendChild(div);
+
+    terminal.scrollTop = terminal.scrollHeight;
+
+    setTimeout(()=>{
+        typeRealLines(arr, index+1);
+    },400);
+}
+
+function scanWifi(){
+    let index=0;
+    let interval=setInterval(()=>{
+        let div=document.createElement("div");
+        div.innerText="[FOUND] "+wifi[index];
+        terminal.appendChild(div);
+        terminal.scrollTop = terminal.scrollHeight;
+        index++;
+        if(index>=wifi.length){
+            clearInterval(interval);
+            startCountdown();
+        }
+    },350);
+}
+
+function startCountdown(){
+    let count=3;
+
+    // 🔊 تشغيل الإنذار
+    alarmSound.loop = true;
+    alarmSound.play().catch(()=>{});
+
+    let div=document.createElement("div");
+    div.classList.add("glitch");
+    terminal.appendChild(div);
+
+    let fileIndex = 0;
+
+    let interval=setInterval(()=>{
+        div.innerText="[!!] Deleting files in "+count+"...";
+
+        if(navigator.vibrate) navigator.vibrate(100);
+
+        if(fileIndex<fakeFiles.length){
+            let fDiv=document.createElement("div");
+            fDiv.innerText="[DELETED] "+fakeFiles[fileIndex];
+            terminal.appendChild(fDiv);
+            fileIndex++;
+        }
+
+        count--;
+        if(count<0){
+            clearInterval(interval);
+            finalMessage();
+        }
+    },700);
+}
+
+function finalMessage(){
+
+    // 🔇 وقف الصوت
+    alarmSound.pause();
+    alarmSound.currentTime = 0;
+
+    let msg=document.createElement("div");
+    msg.classList.add("glitch");
+    msg.innerText = "YOU ARE BEING WATCHED";
+    terminal.appendChild(msg);
+
+    setTimeout(()=>{
+        window.location.href="index2.html";
+    },2000);
+}
+
+document.body.addEventListener("touchstart", ()=>{
+    if(navigator.vibrate) navigator.vibrate(50);
+});
+
+typeLines();
 </script>
 
 </body>
