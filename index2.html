@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نص في منتصف الشاشة</title>
+  <style>
+    /* تصفير المسافات الافتراضية */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center; /* تمركز أفقي */
+      align-items: center;     /* تمركز عمودي */
+      background-color: #000;  /* خلفية سوداء */
+      color: #00ff9f;          /* لون النص أخضر فاقع */
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      padding: 10px;           /* مساحة داخلية على الموبايل */
+    }
+
+    /* نص متجاوب حسب حجم الشاشة */
+    .center-text {
+      font-size: clamp(1.5rem, 5vw, 3rem); /* يتغير حسب حجم الشاشة */
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <div class="center-text">
+    هذه هي الجملة اللي هتظهر في نص الشاشة
+  </div>
+</body>
+</html>
