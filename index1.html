@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>رسالة حب شيك ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #ffecd2, #fcb69f);
+    font-family: 'Cairo', sans-serif;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 3rem;
+    color: #fff;
+    opacity: 0;
+    animation: fadeIn 2s forwards;
+  }
+
+  p {
+    font-size: 1.5rem;
+    color: #fff;
+    margin-top: 15px;
+    opacity: 0;
+    animation: fadeIn 2s 2s forwards;
+  }
+
+  .heart {
+    font-size: 4rem;
+    color: #ff2e63;
+    margin-top: 25px;
+    opacity: 0;
+    animation: fadeIn 2s 3s forwards, beat 1s 5s infinite;
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  @keyframes beat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+
+  button {
+    margin-top: 30px;
+    padding: 10px 25px;
+    font-size: 1.2rem;
+    border: 2px solid #fff;
+    border-radius: 50px;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+    opacity: 0;
+    animation: fadeIn 2s 4s forwards;
+  }
+
+  button:hover {
+    background: #fff;
+    color: #ff2e63;
+    transform: scale(1.1);
+  }
+</style>
+</head>
+<body>
+
+<h1>أنت كل حياتي ❤️</h1>
+<p>خد دقيقة مني...</p>
+<div class="heart">💖</div>
+<button onclick="revealMessage()">إضغط هنا</button>
+
+<script>
+function revealMessage() {
+  const msg = "أنا بحبك أكثر من أي حاجة 💕";
+  alert(msg);
+}
+</script>
+
+</body>
+</html>
